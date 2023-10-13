@@ -126,7 +126,7 @@ function setup() {
     }
     pop();
 
-    //image 9
+    //image 10
     push();
     translate(500, 500);
     for (let i = 0; i < 14; i++) {
