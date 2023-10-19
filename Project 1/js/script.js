@@ -1,149 +1,130 @@
+let colors = [];
+let colorOpacity = 60;
+let bgColor;
+let toColor;
+
+let numLayers = 20;
+let stars = [];
+let centerX, centerY;
+let starDirection = 1;
+
+let moonSize, moonRadDist;
+let moonR, moonG, moonB;
+let moonAngle, moonSpeed;
+
 function setup() {
-    createCanvas(600, 600);
-    background(0);
+    createCanvas(600, 400);
+    background(100);
 
-    // YOUR CODE HERE
+    // colors
+    colors = [
+        color(150, 0, 0),
+        color(0, 130, 0),
+        color(0, 0, 130),
+        color(0, 0, 150),
+        color(150, 150, 150),
+    ];
+    bgColor = color(0);
+    toColor = color(random(30, 50), random(10, 15), random(80, 150));
 
-    //image 1
-    let angle = 0;
-    for (let i = 0; i < 100; i++) {
-        push();
-        angleMode(DEGREES);
-        translate(100, 100);
-        angle += (30 + 0.1) * i;
-        rotate(angle);
-        noFill();
-        stroke(0, 190, 255, 100);
-        rect(0, 0, 40, 60);
-        pop();
-    }
+    // the origin of the star rotation
+    centerX = width / 2;
+    centerY = height / 2 + 100;
 
-    //image 2
-    push();
-    translate(300, 100);
-    for (let d = 0; d < 40; d += 3) {
-        noStroke();
-        fill(222, 100, 100, 100);
-        for (let i = 0; i <= 8; i++) {
-            rotate(i * 45);
-            triangle(d, d, d - 20, d + 30, d + 20, d + 20);
+    // stars
+    for (let i = 0; i < numLayers; i++) {
+        let numStars = (i + 1) * 10;
+        let radius = 20 + i * 20;
+        let speed = 1 + i * 0.1;
+        for (let j = 0; j < numStars; j++) {
+            let angle = map(j, 0, numStars, 0, TWO_PI);
+            let x = centerX + radius * cos(angle);
+            let y = centerY + radius * sin(angle);
+            let star = {
+                x,
+                y,
+                size: random(1, 3),
+                speed,
+                angle: random(TWO_PI),
+                radDist: radius,
+            };
+            stars.push(star);
         }
     }
-    for (let d = 0; d < 35; d += 3) {
-        stroke(0, 0, 0, 100);
+}
+
+function draw() {
+
+    //change background color
+    bgColor = lerpColor(bgColor, toColor, 0.005);
+    background(red(bgColor), green(bgColor), blue(bgColor), colorOpacity);
+
+    //text
+    fill(255);
+    text("Press #0-5", 10, 30);
+    text("Press the blank!", 10, 50);
+    text("Click the sky!", 10, 70);
+    text("u=UP d=DOWN r=RIGHT l=LEPT", 10, 90);
+
+    // display stars
+    for (let star of stars) {
+        star.angle += starDirection * star.speed * 0.001; // ***
+        star.x = centerX + star.radDist * cos(star.angle);
+        star.y = centerY + star.radDist * sin(star.angle);
         fill(255);
-        for (let i = 0; i <= 8; i++) {
-            rotate(i * 45);
-            triangle(d, d, d - 10, d + 15, d + 10, d + 10);
-        }
+        noStroke();
+        circle(star.x, star.y, star.size);
     }
-    pop();
 
-    //image 3
-    push();
-    translate(500, 100);
-    for (let d = 0; d < 40; d += 3) {
-        for (let i = 0; i < 7; i++) {
-            let a = i * 5;
-            let dia = 10;
-            rotate(i * 45);
-            fill(200, 100, 15);
-            noStroke();
-            circle(a, 2 * a, dia);
-        }
-    }
-    pop();
+    // display moon
+    moonAngle += moonSpeed * starDirection;
+    let moonX = centerX + moonRadDist * cos(moonAngle);
+    let moonY = centerY + moonRadDist * sin(moonAngle);
 
-    //image 4
-    push();
     noStroke();
-    translate(100, 300);
-    for (let d = 0; d < 30; d++) {
-        fill(10, 200, 100, 10);
-        for (let i = 0; i < 8; i++) {
-            rotate(i * 45.05);
-            ellipse(0, 0, 10, 150);
-        }
+    fill(moonR, moonG, moonB);
+    circle(moonX, moonY, moonSize);
+}
+
+function keyPressed() {
+    //change direction of the star and moon
+    if (key === " ") {
+        starDirection *= -1;
+        //change the color of the sky (not work well);
+    } else if (key == "1") {
+        toColor = colors[0];
+    } else if (key == "2") {
+        toColor = colors[1];
+    } else if (key == "3") {
+        toColor = colors[2];
+    } else if (key == "4") {
+        toColor = colors[3];
+    } else if (key == "5") {
+        toColor = colors[4];
+    } else if (key == "0") {
+        toColor = color(random(255), random(255), random(255));
     }
-    pop();
-
-    //image 5
-    push();
-    translate(300, 300);
-    textSize(20);
-    for (let d = 0; d < 10; d++) {
-        let a = random(-d, d) * 10;
-        let b = random(-d, d) * 10;
-        text("⭐", a, b);
+    //change the center of the star
+    else if (key == "u" || key == "U") {
+        centerY -= 10;
+    } else if (key == "d" || key == "D") {
+        centerY += 10;
+    } else if (key == "l" || key == "L") {
+        centerX -= 10;
+    } else if (key == "r" || key == "R") {
+        centerX += 10;
     }
-    pop();
+}
 
-    //image 6
-    push();
-    translate(500, 300);
-    for (let i = 0; i < 9; i++) {
-        rotate(i * 45);
-        fill(200, 10 * i, 100);
-        square(10, 10, 40);
-    }
-    for (let i = 0; i < 9; i++) {
-        rotate(i * 45);
-        fill(20 * i, 100, 100, 100);
-        square(20, 20, 20);
-    }
-    pop();
+// create a moon
+function mousePressed() {
+    moonAngle = atan2(mouseY - centerY, mouseX - centerX);
+    moonRadDist = dist(centerX, centerY, mouseX, mouseY);
 
-    //image 7
-    push();
-    translate(100, 500);
-    let xoff = 0;
-    for (let angle = 0; angle <= 360; angle += 1) {
-        let r = map(angle, 0, 360, 20, 255);
-        let g = map(angle, 0, 360, 15, 50);
-        let b = map(angle, 0, 360, 15, 20);
-        stroke(r, g, b, 100);
-        xoff += 0.01;
-        x = sin(angle) * noise(xoff) * 120;
-        y = cos(angle) * noise(xoff) * 120;
-        line(0, 0, x, y);
-    }
+    moonSize = random(10, 15);
+    moonSpeed = random(0.005, 0.03);
 
-    pop();
-
-    // image 8
-    push();
-    translate(300, 500);
-    for (let angle = 0; angle < 360; angle += 30) {
-        rotate(angle);
-        for (let x = 0; x < 80; x += 5) {
-            let r = abs(sin(x)) * 20;
-            fill(r, x * 5, 255 - r, 150);
-            let y = map(sin(x), -1, 1, 0, 10) * 3;
-            rotate(x * 0.5);
-            noStroke();
-            circle(x, y, 10);
-        }
-    }
-    pop();
-
-    //image 10
-    push();
-    translate(500, 500);
-    for (let i = 0; i < 14; i++) {
-        translate(0, i);
-        let r = map(i * 4, 0, 14, 150, 255);
-        let g = map(i, 0, 14, 100, 200);
-        let b = map(i * 4, 0, 14, 50, 150);
-        for (let i = 0; i < 3; i++) {
-            noStroke();
-            fill(r, g, b, 100);
-            circle(-50 + i * 50, -50, 50);
-        }
-    }
-    pop();
-
-
-    // AFTER YOUR CODE HAS RUN:
-    //saveCanvas('Scarlett', 'png');
-    // saves the canvas as a png image
+    moonR = random(255);
+    moonG = random(255);
+    moonB = random(255);
 }
