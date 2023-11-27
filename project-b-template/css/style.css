@@ -1,0 +1,95 @@
+html {
+  height: 100%;
+
+}
+
+#body1 {
+  margin: 5%;
+  background-image: url("../assets/wave.jpg");
+  background-size: cover;
+  background-position: center;
+  color: white;
+}
+
+
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: white;
+}
+
+.link1 {
+  color: white;
+}
+
+
+.image {
+  display: inline-block;
+  margin: 5%;
+  padding: 0%;
+}
+
+.container-landing-page {
+  width: 100%;
+  height: 45%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.intro {
+  color: white;
+  font-family: 'Times New Roman', Times, serif;
+  margin: 0%;
+  padding: 3%;
+  width: 10%;
+  height: 300px;
+  display: inline-block;
+  justify-content: center;
+  text-align: center;
+  border-style: dashed;
+  border-color: white;
+
+}
+
+.all {
+  display: flex;
+  margin: auto;
+  justify-content: center;
+}
+
+.main-container {
+  background-color: lightgray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.interface-container {
+  background-color: gray;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* FLEXBOX PROPERTIES */
+/* 
+flex-direction
+flex-wrap
+flex-flow
+justify-content
+align-items
+align-content
+*/
